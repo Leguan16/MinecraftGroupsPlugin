@@ -1,0 +1,6 @@
+name: Groups
+version: '${project.version}'
+main: at.noah.groups.Groups
+api-version: 1.18
+authors: [ Leguan16 ]
+description: A group plugin for sharing the same warps
