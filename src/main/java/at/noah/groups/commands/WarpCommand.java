@@ -16,9 +16,13 @@ public record WarpCommand(WarpManager warpManager) implements TabExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (sender instanceof Player player) {
-            if (args.length == 2) {
+            if (args.length < 1 || args.length > 2) {
+                player.sendMessage("Usage: /warp groupName warpName");
+            } else {
                 warpManager.warpPlayer(player, args[0], args[1]);
             }
+        } else {
+            sender.sendMessage("This command can only be executed by a player!");
         }
         return true;
     }

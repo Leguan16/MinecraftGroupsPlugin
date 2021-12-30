@@ -36,12 +36,19 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
                 return true;
             }
 
+            if (args.length == 1) {
+                switch (args[0].toLowerCase()) {
+                    case "list" -> groupManager.listGroupsOfPlayer(player);
+                }
+                return true;
+            }
             if (args.length == 2) {
                 switch (args[0].toLowerCase()) {
                     case "create" -> groupManager.createGroup(player, args[1]);
                     case "delete" -> groupManager.deleteGroup(player, args[1]);
-                    case "list" -> groupManager.listGroupsOfPlayer(player);
+
                 }
+                return true;
             }
 
             if (args.length == 4) {

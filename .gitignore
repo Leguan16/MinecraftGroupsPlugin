@@ -4,6 +4,7 @@ working_dir/
 *.iml
 *.ipr
 *.iws
+todo
 
 # IntelliJ
 out/
@@ -94,8 +95,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-target/
 
 pom.xml.tag
 pom.xml.releaseBackup

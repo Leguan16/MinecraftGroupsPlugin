@@ -95,7 +95,7 @@ public class GroupManager {
             return;
         }
 
-//        if (!player.hasPermission("group.addMembers")) {
+//        if (!executor.hasPermission("group.addMembers")) {
 //            player.sendMessage("You dont have enough permissions to create a group");
 //            return;
 //        }
@@ -129,20 +129,25 @@ public class GroupManager {
     public void listGroupsOfPlayer(Player player) {
         List<Group> groupsContainingPlayer = getGroupsOfMember(player);
 
+        System.out.println("groups");
+        groupsContainingPlayer.forEach(group -> System.out.println(group.getName()));
+
         StringBuilder message = new StringBuilder("Your Groups:\n");
 
         for (Group group : groupsContainingPlayer) {
             message.append(group.getName()).append("\n");
         }
 
-        player.sendMessage(message.toString());
+        String finalMessage = message.toString();
+        System.out.println(finalMessage);
+        player.sendMessage(finalMessage);
     }
 
     public Optional<Group> getGroup(String groupName) {
         if (groups.containsKey(groupName)) {
             Group group = groups.get(groupName);
 
-            return Optional.of(new Group(group.getOwner(), group.getName(), group.getMembers()));
+            return Optional.of(group);
         }
 
         return Optional.empty();

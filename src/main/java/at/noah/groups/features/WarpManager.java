@@ -36,7 +36,7 @@ public class WarpManager {
         var warps = group.getWarpPoints();
 
         if (warps.containsKey(warpPointName.toLowerCase())) {
-            executor.sendMessage("A warp point with that location already exists!");
+            executor.sendMessage("A warp point with that name already exists!");
             return;
         }
 
@@ -70,6 +70,8 @@ public class WarpManager {
         }
 
         group.removeWarpPoint(warpPointName);
+
+        executor.sendMessage("removed warp point with name " + warpPointName + " from group " + group.getName());
     }
 
     public Map<String, List<WarpPoint>> getPossibleWarpPointsOfPlayer(Player player) {
