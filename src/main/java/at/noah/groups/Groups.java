@@ -2,8 +2,8 @@ package at.noah.groups;
 
 import at.noah.groups.commands.GroupCommand;
 import at.noah.groups.commands.WarpCommand;
-import at.noah.groups.features.GroupManager;
-import at.noah.groups.features.WarpManager;
+import at.noah.groups.managers.GroupManager;
+import at.noah.groups.managers.WarpManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;

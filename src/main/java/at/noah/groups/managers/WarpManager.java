@@ -1,4 +1,4 @@
-package at.noah.groups.features;
+package at.noah.groups.managers;
 
 import at.noah.groups.domain.Group;
 import at.noah.groups.domain.WarpPoint;

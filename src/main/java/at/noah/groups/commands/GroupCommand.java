@@ -2,8 +2,8 @@ package at.noah.groups.commands;
 
 import at.noah.groups.domain.Group;
 import at.noah.groups.domain.WarpPoint;
-import at.noah.groups.features.GroupManager;
-import at.noah.groups.features.WarpManager;
+import at.noah.groups.managers.GroupManager;
+import at.noah.groups.managers.WarpManager;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
