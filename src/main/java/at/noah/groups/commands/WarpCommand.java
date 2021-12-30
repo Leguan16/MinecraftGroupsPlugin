@@ -1,7 +1,9 @@
 package at.noah.groups.commands;
 
+import at.noah.groups.Groups;
 import at.noah.groups.domain.WarpPoint;
 import at.noah.groups.managers.WarpManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -17,12 +19,12 @@ public record WarpCommand(WarpManager warpManager) implements TabExecutor {
 
         if (sender instanceof Player player) {
             if (args.length < 1 || args.length > 2) {
-                player.sendMessage("Usage: /warp groupName warpName");
+                player.sendMessage(Groups.PREFIX.append(Component.text("Usage: /warp groupName warpName")));
             } else {
                 warpManager.warpPlayer(player, args[0], args[1]);
             }
         } else {
-            sender.sendMessage("This command can only be executed by a player!");
+            sender.sendMessage(Groups.PREFIX.append(Component.text("This command can only be executed by a player!")));
         }
         return true;
     }

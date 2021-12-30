@@ -1,9 +1,11 @@
 package at.noah.groups.commands;
 
+import at.noah.groups.Groups;
 import at.noah.groups.domain.Group;
 import at.noah.groups.domain.WarpPoint;
 import at.noah.groups.managers.GroupManager;
 import at.noah.groups.managers.WarpManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,12 +24,12 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
         if (sender instanceof Player player) {
 
             if (!player.hasPermission("group.command")) {
-                player.sendMessage("You dont have permissions for that command");
+                player.sendMessage(Groups.PREFIX.append(Component.text("You dont have permissions for that command")));
                 return true;
             }
 
             if (args.length < 1) {
-                player.sendMessage("Usage: /group help");
+                player.sendMessage(Groups.PREFIX.append(Component.text("Usage: /group help")));
                 return true;
             }
 
@@ -37,8 +39,8 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
             }
 
             if (args.length == 1) {
-                switch (args[0].toLowerCase()) {
-                    case "list" -> groupManager.listGroupsOfPlayer(player);
+                if ("list".equalsIgnoreCase(args[0])) {
+                    groupManager.listGroupsOfPlayer(player);
                 }
                 return true;
             }
@@ -67,7 +69,7 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
             }
 
         } else {
-            sender.sendMessage("This command can only be executed by a Player");
+            sender.sendMessage(Groups.PREFIX.append(Component.text("This command can only be executed by a Player")));
             return false;
         }
 
@@ -83,7 +85,7 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
                 /group delete [name]
                 """;
 
-        player.sendMessage(sb);
+        player.sendMessage(Groups.PREFIX.append(Component.text(sb)));
     }
 
     @Override
@@ -147,8 +149,6 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
                 }
             }
         }
-
-
         return Collections.emptyList();
     }
 }
