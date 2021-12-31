@@ -133,4 +133,7 @@ public class WarpManager {
                 .append(Component.text(warpPointName).color(ComponentUtil.GOLD)));
     }
 
+    public void listWarpPointOfGroup(Player player, String groupName) {
+
+    }
 }

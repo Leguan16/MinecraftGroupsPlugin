@@ -19,7 +19,6 @@ public class GroupManager {
 
     public void createGroup(Player owner, String name) {
         if (groups.containsKey(name)) {
-
             owner.sendMessage(Groups.PREFIX
                     .append(Component.text("Group with name "))
                     .append(Component.text(name).color(ComponentUtil.GOLD))
@@ -42,12 +41,18 @@ public class GroupManager {
     }
 
     public void deleteGroup(Player player, String name) {
-
-
-        if (!player.hasPermission("group.delete")) {
-            player.sendMessage(Groups.PREFIX.append(Component.text("You dont have enough permissions to delete a group")));
+        if (!groups.containsKey(name)) {
+            player.sendMessage(Groups.PREFIX
+                    .append(Component.text("Group with name "))
+                    .append(Component.text(name).color(ComponentUtil.GOLD))
+                    .append(Component.text(" does not exist!")));
             return;
         }
+
+//        if (!player.hasPermission("group.delete")) {
+//            player.sendMessage(Groups.PREFIX.append(Component.text("You dont have enough permissions to delete a group")));
+//            return;
+//        }
 
         if (!groups.get(name).getOwner().equals(player)) {
             player.sendMessage(Groups.PREFIX.append(Component.text("Only the owner can delete their groups")));
@@ -82,7 +87,7 @@ public class GroupManager {
         Group group = groups.get(groupName);
 
         if (!group.getOwner().equals(executor)) {
-            executor.sendMessage(Groups.PREFIX.append(Component.text("Only the owner can add members to the group")));
+            executor.sendMessage(Groups.PREFIX.append(Component.text("Only the owner can add members to the group.")));
             return;
         }
 
@@ -91,7 +96,8 @@ public class GroupManager {
         if (offlinePlayer.isEmpty()) {
             executor.sendMessage(Groups.PREFIX
                     .append(Component.text("No player found with name "))
-                    .append(Component.text(toAddName).color(ComponentUtil.GOLD)));
+                    .append(Component.text(toAddName).color(ComponentUtil.GOLD))
+                    .append(Component.text(".")));
             return;
         }
 
@@ -102,7 +108,7 @@ public class GroupManager {
 
         assert toAddName != null;
 
-        if (group.getMembers().contains(executor)) {
+        if (group.getMembers().contains(toAdd)) {
             executor.sendMessage(Groups.PREFIX
                     .append(Component.text("Player "))
                     .append(Component.text(toAddName).color(ComponentUtil.GOLD))
@@ -115,8 +121,9 @@ public class GroupManager {
         executor.sendMessage(Groups.PREFIX
                 .append(Component.text("Added "))
                 .append(Component.text(toAdd.getName()).color(ComponentUtil.GOLD))
-                .append(Component.text("to group "))
-                .append(Component.text(groupName).color(ComponentUtil.GOLD)));
+                .append(Component.text(" to group "))
+                .append(Component.text(groupName).color(ComponentUtil.GOLD))
+                .append(Component.text(".")));
     }
 
     public void removeMemberFromGroup(Player executor, String groupName, String toRemoveName) {
@@ -145,7 +152,8 @@ public class GroupManager {
         if (offlinePlayer.isEmpty()) {
             executor.sendMessage(Groups.PREFIX
                     .append(Component.text("No player found with name "))
-                    .append(Component.text(toRemoveName).color(ComponentUtil.GOLD)));
+                    .append(Component.text(toRemoveName).color(ComponentUtil.GOLD))
+                    .append(Component.text(".")));
             return;
         }
 
@@ -154,8 +162,8 @@ public class GroupManager {
         toRemoveName = toRemove.getName();
 
         assert toRemoveName != null;
-        
-        if (!group.getMembers().contains(executor)) {
+
+        if (!group.getMembers().contains(toRemove)) {
             executor.sendMessage(Groups.PREFIX
                     .append(Component.text("Player "))
                     .append(Component.text(toRemove.getName()).color(ComponentUtil.GOLD))
@@ -166,21 +174,25 @@ public class GroupManager {
         group.removeMember(toRemove);
 
         executor.sendMessage(Groups.PREFIX
-                .append(Component.text("Added "))
+                .append(Component.text("Removed "))
                 .append(Component.text(toRemove.getName()).color(ComponentUtil.GOLD))
                 .append(Component.text(" from group "))
-                .append(Component.text(groupName).color(ComponentUtil.GOLD)));
+                .append(Component.text(groupName).color(ComponentUtil.GOLD))
+                .append(Component.text(".")));
     }
 
     public void listGroupsOfPlayer(Player player) {
         List<Group> groupsContainingPlayer = getGroupsOfMember(player);
 
-        groupsContainingPlayer.forEach(group -> System.out.println(group.getName()));
+        if (groupsContainingPlayer.size() == 0) {
+            player.sendMessage(Groups.PREFIX.append(Component.text("You are currently not in a group!")));
+            return;
+        }
 
-        StringBuilder message = new StringBuilder("Your Groups:\n");
+        StringBuilder message = new StringBuilder("Your Groups:");
 
         for (Group group : groupsContainingPlayer) {
-            message.append(group.getName()).append("\n");
+            message.append("\n").append(group.getName());
         }
 
         player.sendMessage(Groups.PREFIX.append(Component.text(message.toString())));
@@ -202,5 +214,14 @@ public class GroupManager {
                 .stream()
                 .filter(group -> group.getMembers().contains(player))
                 .toList();
+    }
+
+    public void listPlayersOfGroup(Player player, String groupName) {
+        if (!groups.containsKey(groupName)) {
+            player.sendMessage(Groups.PREFIX
+                    .append(Component.text("Group with name "))
+                    .append(Component.text(groupName))
+                    .append(Component.text(" does not exist")));
+        }
     }
 }

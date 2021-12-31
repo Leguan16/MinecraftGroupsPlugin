@@ -41,6 +41,8 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
             if (args.length == 1) {
                 if ("list".equalsIgnoreCase(args[0])) {
                     groupManager.listGroupsOfPlayer(player);
+                } else {
+                    help(player, args);
                 }
                 return true;
             }
@@ -48,7 +50,22 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
                 switch (args[0].toLowerCase()) {
                     case "create" -> groupManager.createGroup(player, args[1]);
                     case "delete" -> groupManager.deleteGroup(player, args[1]);
+                    default -> help(player, args);
+                }
+                return true;
+            }
 
+            if (args.length == 3) {
+                if ("warppoint".equalsIgnoreCase(args[0])) {
+                    if ("list".equalsIgnoreCase(args[1])) {
+                        warpManager.listWarpPointOfGroup(player, args[2]);
+                    }
+                } else if ("member".equalsIgnoreCase(args[0])) {
+                    if ("list".equalsIgnoreCase(args[1])) {
+                        groupManager.listPlayersOfGroup(player, args[2]);
+                    }
+                } else {
+                    help(player, args);
                 }
                 return true;
             }
@@ -59,15 +76,18 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
                         case "create" -> warpManager.createWarpPoint(player, args[2], args[3]);
                         case "delete" -> warpManager.deleteWarpPoint(player, args[2], args[3]);
                     }
-                }
-                if ("member".equalsIgnoreCase(args[0])) {
+                } else if ("member".equalsIgnoreCase(args[0])) {
                     switch (args[1]) {
                         case "add" -> groupManager.addMemberToGroup(player, args[2], args[3]);
                         case "remove" -> groupManager.removeMemberFromGroup(player, args[2], args[3]);
                     }
+                } else {
+                    help(player, args);
                 }
+                return true;
             }
 
+            help(player, args);
         } else {
             sender.sendMessage(Groups.PREFIX.append(Component.text("This command can only be executed by a Player")));
             return false;
@@ -78,20 +98,54 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
 
     private void help(Player player, String[] args) {
 
-        String sb = """
+        String helpMessage = """
                 List of possible commands:\s
                 /group help
                 /group create [name]
                 /group delete [name]
-                """;
+                /group warppoint
+                /group member""";
 
-        player.sendMessage(Groups.PREFIX.append(Component.text(sb)));
+        if (args.length == 2) {
+            if ("help".equalsIgnoreCase(args[0])) {
+                switch (args[1].toLowerCase()) {
+                    case "warppoints" -> helpMessage = """
+                            Help for warp points:
+                            /group warppoint create [group] [name]
+                            /group warppoint delete [group] [name]
+                            /group warppoint list [group]""";
+
+                    case "member" -> helpMessage = """
+                            Help for members:
+                            /group member add [group] [player]
+                            /group member remove [group] [player]
+                            /group member list [group]""";
+                }
+            }
+        } else if (args.length >= 2) {
+            switch (args[0].toLowerCase()) {
+                case "warppoints" -> {
+                    switch (args[1]) {
+                        case "create" -> helpMessage = "Usage: /group warppoint create [group] [name]";
+                        case "delete" -> helpMessage = "Usage: /group warppoint delete [group] [name]";
+                        case "list" -> helpMessage = "Usage: /group warppoint list [group]";
+                    }
+                }
+                case "member" -> {
+                    switch (args[1]) {
+                        case "add" -> helpMessage = "Usage: /group member add [group] [player]";
+                        case "remove" -> helpMessage = "Usage: /group member remove [group] [player]";
+                        case "list" -> helpMessage = "Usage: /group member list [group]";
+                    }
+                }
+            }
+        }
+
+        player.sendMessage(Groups.PREFIX.append(Component.text(helpMessage)));
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command
-            command, @NotNull String alias, @NotNull String[] args) {
-        // TODO: 26/12/2021 make this working
+    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
 
         if (sender instanceof Player player) {
             if (args.length == 1) {
@@ -99,10 +153,13 @@ public record GroupCommand(GroupManager groupManager, WarpManager warpManager) i
             }
             if (args.length == 2) {
                 if ("warppoint".equalsIgnoreCase(args[0])) {
-                    return List.of("create", "delete");
+                    return List.of("create", "delete", "list");
                 }
                 if ("member".equalsIgnoreCase(args[0])) {
-                    return List.of("add", "remove");
+                    return List.of("add", "remove", "list");
+                }
+                if ("help".equalsIgnoreCase(args[0])) {
+                    return List.of("member", "warppoints");
                 }
             }
             //group warppoint remove groupName warpName
